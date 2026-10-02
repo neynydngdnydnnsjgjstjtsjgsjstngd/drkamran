@@ -14,10 +14,12 @@ app.get('/api/v1/secure-node-fetch-9988', (req, res) => {
   const clientToken = req.headers['x-kamran-token'];
   const acceptHeader = req.headers['accept'] || '';
 
+  // 1. Block direct browser navigation / URL typing
   if (acceptHeader.includes('text/html')) {
     return res.status(403.4).send('Access Denied');
   }
 
+  // 2. Validate secret token
   if (clientToken !== SECRET_TOKEN) {
     return res.status(403).json({ error: 'Unauthorized access blocked.' });
   }
@@ -61,7 +63,7 @@ app.get('/code', async (req, res) => {
   }
 });
 
-// Explicit Clean Routes for HTML Pages
+// Frontend HTML Pages Routes
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/shop', (req, res) => res.sendFile(path.join(__dirname, 'shop.html')));
 app.get('/support', (req, res) => res.sendFile(path.join(__dirname, 'support.html')));
@@ -70,16 +72,6 @@ app.get('/resources', (req, res) => res.sendFile(path.join(__dirname, 'resources
 app.get('/video', (req, res) => res.sendFile(path.join(__dirname, 'video.html')));
 app.get('/estimate', (req, res) => res.sendFile(path.join(__dirname, 'estimate.html')));
 app.get('/giveaway', (req, res) => res.sendFile(path.join(__dirname, 'giveaway.html')));
-
-// Fallback: if anyone types file name directly with .html
-app.get('/:page', (req, res) => {
-  const pageFile = path.join(__dirname, `${req.params.page}`);
-  res.sendFile(pageFile, (err) => {
-    if (err) {
-      res.status(404).sendFile(path.join(__dirname, 'index.html'));
-    }
-  });
-});
 
 if (require.main === module) {
   app.listen(PORT, () => {
