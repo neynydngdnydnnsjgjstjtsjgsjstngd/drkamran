@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estimate Project | KAMRAN-MD</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #ff9900;
+      --secondary: #ff5500;
+      --bg-color: #ffffff;
+      --text-color: #1a1a1a;
+      --subtext-color: #666666;
+      --border-color: rgba(0,0,0,0.08);
+      --box-bg: #f9f9fb;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 30px auto;
+      background: var(--box-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff;
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      padding: 8px 16px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    .back-btn:hover { background: var(--primary); color: white; }
+
+    h1 { color: var(--primary); font-size: 24px; margin-bottom: 8px; }
+    p.desc { font-size: 13px; color: var(--subtext-color); margin-bottom: 25px; }
+
+    .form-group { margin-bottom: 20px; }
+    label { display: block; font-weight: 600; font-size: 13px; margin-bottom: 8px; }
+
+    select, input, textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 13px;
+      background: #fff;
+      outline: none;
+    }
+
+    select:focus, input:focus, textarea:focus { border-color: var(--primary); }
+
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 6px 20px rgba(255, 153, 0, 0.3);
+      transition: 0.3s;
+    }
+
+    .submit-btn:hover { transform: translateY(-2px); }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+    <h1>Project Cost Estimator</h1>
+    <p class="desc">Select your project requirements below, and send the details directly to Dr. Kamran via WhatsApp.</p>
+
+    <div class="form-group">
+      <label>Your Name</label>
+      <input type="text" id="clientName" placeholder="Enter your full name">
+    </div>
+
+    <div class="form-group">
+      <label>Select Service Type</label>
+      <select id="serviceType">
+        <option value="WhatsApp Automation Bot">WhatsApp Automation Bot</option>
+        <option value="Instant Support Setup">Instant Support Setup</option>
+        <option value="Lead Capture System">Lead Capture System</option>
+        <option value="Custom Bot Development">Custom Bot Development</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Project Timeline / Urgency</label>
+      <select id="timeline">
+        <option value="Within 1 Week">Within 1 Week</option>
+        <option value="1-2 Weeks">1-2 Weeks</option>
+        <option value="Immediate / Urgent">Immediate / Urgent</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Project Details / Requirements</label>
+      <textarea id="projectDetails" rows="4" placeholder="Describe what you want to build..."></textarea>
+    </div>
+
+    <button class="submit-btn" onclick="sendToWhatsApp()"><i class="fab fa-whatsapp"></i> Send Estimation to WhatsApp</button>
+  </div>
+
+  <script>
+    function sendToWhatsApp() {
+      const name = document.getElementById('clientName').value.trim();
+      const service = document.getElementById('serviceType').value;
+      const timeline = document.getElementById('timeline').value;
+      const details = document.getElementById('projectDetails').value.trim();
+
+      if (!name || !details) {
+        alert('Please fill in your name and project details!');
+        return;
+      }
+
+      const msg = `Hello Dr. Kamran,%0A%0A*New Project Estimation Request:*%0A- *Name:* ${name}%0A- *Service:* ${service}%0A- *Timeline:* ${timeline}%0A- *Details:* ${details}`;
+      
+      window.open(`https://wa.me/923195068309?text=${msg}`, '_blank');
+    }
+  </script>
+</body>
+</html>

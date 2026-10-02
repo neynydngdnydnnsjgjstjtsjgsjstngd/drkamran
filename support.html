@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support | KAMRAN-MD</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+  
+  <style>
+    :root { --primary: #ff9900; --secondary: #ff5500; --bg-color: #ffffff; --text-color: #1a1a1a; --subtext-color: #666666; --border-color: rgba(0,0,0,0.08); --box-bg: #f9f9fb; }
+    body { font-family: 'Poppins', sans-serif; background: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; }
+    .container { max-width: 800px; margin: 40px auto; position: relative; }
+    
+    /* Top Bar with Admin Icon */
+    .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .back-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--box-bg); border: 1px solid var(--border-color); color: var(--text-color); padding: 8px 16px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 13px; }
+    .back-btn:hover { background: var(--primary); color: white; }
+    
+    .admin-icon-btn { background: rgba(var(--primary-rgb, 255,153,0), 0.15); border: 1px solid var(--primary); color: var(--primary); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: 0.3s; }
+    .admin-icon-btn:hover { background: var(--primary); color: white; }
+
+    h1 { color: var(--primary); font-size: 28px; margin-bottom: 20px; }
+    .section-box { background: var(--box-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+    .section-box h3 { font-size: 18px; margin-bottom: 10px; color: var(--text-color); }
+    .section-box p { font-size: 13.5px; color: var(--subtext-color); line-height: 1.6; }
+
+    /* Admin Modal Styles */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); display: none; align-items: center; justify-content: center; z-index: 3000; padding: 15px; }
+    .modal-overlay.show { display: flex; }
+    .modal-card { background: #fff; border-radius: 20px; width: 100%; max-width: 450px; padding: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); color: #1a1a1a; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .form-group { margin-bottom: 15px; }
+    .form-input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-family: inherit; font-size: 13px; margin-top: 5px; outline: none; }
+    .form-input:focus { border-color: var(--primary); }
+    .modal-btn { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 14px; margin-top: 5px; }
+    .admin-panel { display: none; }
+    .admin-panel.active { display: block; }
+
+    /* Dynamic Posts Display */
+    .dynamic-post { background: #fff; border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; margin-top: 15px; display: flex; gap: 15px; align-items: center; }
+    .post-img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); }
+    .post-content h4 { font-size: 15px; margin-bottom: 3px; color: var(--text-color); }
+    .post-content p { font-size: 12.5px; color: var(--subtext-color); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-nav">
+      <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+      <!-- Chhota sa Admin Icon har page ke upar -->
+      <button class="admin-icon-btn" onclick="openAdminModal()" title="Admin Login"><i class="fas fa-user-shield"></i></button>
+    </div>
+
+    <h1>Support & Legal</h1>
+    
+    <div class="section-box" id="contact">
+      <h3>Contact Support</h3>
+      <p>Get in touch directly with Dr. Kamran and the support team via WhatsApp.</p>
+      <a href="https://wa.me/923195068309" target="_blank" style="display:inline-block; margin-top:10px; background:#25d366; color:white; padding:8px 16px; border-radius:8px; text-decoration:none; font-weight:600; font-size:12.5px;"><i class="fab fa-whatsapp"></i> Chat on WhatsApp</a>
+    </div>
+
+    <!-- Admin ke banaye gaye Posts yahan show honge -->
+    <div id="postsContainer"></div>
+  </div>
+
+  <!-- Admin Login & Dashboard Modal -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalTitle" style="color:var(--primary);">Admin Portal</h3>
+        <button onclick="closeAdminModal()" style="background:none; border:none; font-size:18px; cursor:pointer;">&times;</button>
+      </div>
+
+      <!-- Step 1: Login Form -->
+      <div id="loginSection">
+        <div class="form-group">
+          <label>Enter Admin Password</label>
+          <input type="password" id="adminPassInput" class="form-input" placeholder="Password (dr78600#)">
+        </div>
+        <button class="modal-btn" onclick="verifyAdmin()">Login</button>
+      </div>
+
+      <!-- Step 2: Admin Dashboard (Post & Profile Creator) -->
+      <div id="dashboardSection" class="admin-panel">
+        <p style="font-size:12px; color:green; margin-bottom:10px;"><i class="fas fa-check-circle"></i> Logged in as Dr. Kamran</p>
+        
+        <div class="form-group">
+          <label>Your Name / Title</label>
+          <input type="text" id="postName" class="form-input" value="Dr. Kamran">
+        </div>
+        <div class="form-group">
+          <label>Select Profile / Post Image</label>
+          <input type="file" id="postImageFile" class="form-input" accept="image/*">
+        </div>
+        <div class="form-group">
+          <label>Post Description / Message</label>
+          <textarea id="postDesc" class="form-input" rows="3" placeholder="Write something amazing..."></textarea>
+        </div>
+        <button class="modal-btn" onclick="publishPost()">Publish Post to DB</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAPni9nn_4ITReeTpmRkDPnldZQviLUHVU",
+      authDomain: "digitalstoneofficial-21cc2.firebaseapp.com",
+      databaseURL: "https://digitalstoneofficial-21cc2-default-rtdb.firebaseio.com",
+      projectId: "digitalstoneofficial-21cc2",
+      storageBucket: "digitalstoneofficial-21cc2.appspot.com",
+      messagingSenderId: "568364264149",
+      appId: "1:568364264149:web:e00ed44d99aca285ed905c"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    function openAdminModal() {
+      document.getElementById('adminModal').classList.add('show');
+    }
+
+    function closeAdminModal() {
+      document.getElementById('adminModal').classList.remove('show');
+    }
+
+    function verifyAdmin() {
+      const pass = document.getElementById('adminPassInput').value;
+      if (pass === 'kamran@7860#') {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('dashboardSection').classList.add('active');
+        document.getElementById('modalTitle').textContent = 'Admin Dashboard';
+      } else {
+        alert('Incorrect Admin Password!');
+      }
+    }
+
+    // Publish Post with Image (Converted to Base64 for instant DB storage)
+    function publishPost() {
+      const name = document.getElementById('postName').value;
+      const desc = document.getElementById('postDesc').value;
+      const fileInput = document.getElementById('postImageFile');
+
+      if (!desc) {
+        alert('Please write a description!');
+        return;
+      }
+
+      if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          savePostToFirebase(name, desc, e.target.result);
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+      } else {
+        savePostToFirebase(name, desc, 'https://via.placeholder.com/60');
+      }
+    }
+
+    function savePostToFirebase(name, desc, imageUrl) {
+      db.ref('admin_posts').push({
+        name: name,
+        description: desc,
+        image: imageUrl,
+        timestamp: Date.now()
+      }, (error) => {
+        if (error) {
+          alert('Failed to publish post!');
+        } else {
+          alert('Post published successfully!');
+          closeAdminModal();
+          document.getElementById('postDesc').value = '';
+        }
+      });
+    }
+
+    // Load Posts live from Firebase Database
+    db.ref('admin_posts').on('value', (snapshot) => {
+      const container = document.getElementById('postsContainer');
+      container.innerHTML = '';
+      const data = snapshot.val();
+      if (data) {
+        Object.values(data).reverse().forEach(post => {
+          container.innerHTML += `
+            <div class="dynamic-post">
+              <img src="${post.image}" class="post-img" alt="Profile">
+              <div class="post-content">
+                <h4>${post.name}</h4>
+                <p>${post.description}</p>
+              </div>
+            </div>
+          `;
+        });
+      }
+    });
+  </script>
+</body>
+</html>
