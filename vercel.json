@@ -1,9 +1,41 @@
 {
   "version": 2,
-  "builds": [
+  "routes": [
     {
-      "src": "index.js",
-      "use": "@vercel/node"
+      "src": "/shop",
+      "dest": "/shop.html"
+    },
+    {
+      "src": "/support",
+      "dest": "/support.html"
+    },
+    {
+      "src": "/services",
+      "dest": "/services.html"
+    },
+    {
+      "src": "/resources",
+      "dest": "/resources.html"
+    },
+    {
+      "src": "/video",
+      "dest": "/video.html"
+    },
+    {
+      "src": "/estimate",
+      "dest": "/estimate.html"
+    },
+    {
+      "src": "/giveaway",
+      "dest": "/giveaway.html"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "index.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "index.js"
     }
   ]
 }
