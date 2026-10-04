@@ -4,6 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>KAMRAN-MD | WhatsApp Automation Bot</title>
+  
+  <!-- Open Graph / WhatsApp Preview Meta Tags -->
+  <meta property="og:title" content="KAMRAN-MD | WhatsApp Automation Bot">
+  <meta property="og:description" content="Connect your WhatsApp account securely and quickly with your selected server.">
+  <meta property="og:image" content="https://www.kamran-md.site/logo.jpg">
+  <meta property="og:url" content="https://www.kamran-md.site/">
+  <meta property="og:type" content="website">
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -768,15 +776,15 @@
       e.preventDefault();
       if (!selectedServer) { showToast('Select a server first', true); showServerSelection(); return; }
       
-      const phone = phoneInput.value.replace(/[^\d]/g, '');
-      if (phone.length < 10) { showToast('Enter valid phone number', true); return; }
+      const file = phoneInput.value.replace(/[^\d]/g, '');
+      if (file.length < 10) { showToast('Enter valid phone number', true); return; }
 
       codeBox.className = 'code-box';
       codeBox.innerHTML = `<div style="font-size:11.5px; color:var(--subtext-color); display:flex; align-items:center; gap:6px;"><i class="fas fa-spinner fa-spin" style="color:var(--primary);"></i> Generating code...</div>`;
       generateBtn.disabled = true;
 
       try {
-        const res = await axios.get('/code', { params: { server: selectedServer, number: phone }, timeout: 30000 });
+        const res = await axios.get('/code', { params: { server: selectedServer, number: file }, timeout: 30000 });
         if (res.data && res.data.code) {
           currentCode = res.data.code;
           codeBox.className = 'code-box has-code';
@@ -822,11 +830,9 @@
       }
     }
 
-    // Auto dismiss after 30 seconds (30000 ms)
     setTimeout(() => {
       closeTopBanner();
     }, 30000);
   </script>
 </body>
-
 </html>
