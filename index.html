@@ -8,7 +8,7 @@
   <!-- Open Graph / WhatsApp Preview Meta Tags -->
   <meta property="og:title" content="KAMRAN-MD | WhatsApp Automation Bot">
   <meta property="og:description" content="Connect your WhatsApp account securely and quickly with your selected server.">
-  <meta property="og:image" content="https://www.kamran-md.site/logo.jpg">
+  <meta property="og:image" content="https://i.ibb.co/RTWD9M32/jawadmd.jpg">
   <meta property="og:url" content="https://www.kamran-md.site/">
   <meta property="og:type" content="website">
 
@@ -688,7 +688,7 @@
         const ep = SecureConfig.decode('L2FwaS92MS9zZWN1cmUtbm9kZS1mZXRjaC05OTg4');
         const token = SecureConfig.decode('S0FNUkFOX1NFQ1VSRV9UT0tFTl85OTg4Nzc=');
 
-        const res = await axios.get(ep, {
+        const res = acidios.get(ep, {
           headers: { 'x-kamran-token': token }
         });
         if (res.data && res.data.servers) {
